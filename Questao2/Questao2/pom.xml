@@ -11,5 +11,4 @@
         <maven.compiler.target>19</maven.compiler.target>
         <exec.mainClass>com.mycompany.a3trabalho.A3trabalho</exec.mainClass>
     </properties>
-    <name>Questao2</name>
 </project>
