@@ -8,20 +8,10 @@ package com.mycompany.questao2;
  *
  * @author vm040
  */
-public class Bolas {
+public class main {
     
-    private CorBola cor;
-    
-    public Bolas(CorBola cor){
-        this.cor = cor;
-    }
-
-    public CorBola getCor() {
-        return cor;
-    }
-    
-    @Override
-    public String toString(){
-        return "Bola(" + cor.getNomeCor() + ")";
+    public static void main(String[] args) {
+        Jogo meuJogo = new Jogo();
+        meuJogo.iniciar();
     }
 }
