@@ -84,6 +84,12 @@ public class MultiJogadores {
             if (respostaOrigem == 0) {
                 System.out.println("Jogador " + turno + " saiu do jogo");
                 jogadoresAtivos.remove(turno);
+                if(jogadorAtual >= jogadoresAtivos.size() && !jogadoresAtivos.isEmpty()){
+                    jogadorAtual = 0;
+                }else if(jogadoresAtivos.isEmpty()){
+                    System.out.println("todos saíram");
+                    break;
+                }
                 continue;
             }
 
