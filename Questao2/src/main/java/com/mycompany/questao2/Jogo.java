@@ -28,19 +28,20 @@ public class Jogo {
     private void iniciarJogo() {
 
         List<Bolas> todasBolas = new ArrayList<>();
+        int bolasCores = (pilhasCheias * maxBolas) / CorBola.values().length;
 
         //Cria as bolas necessárias
         for (CorBola cor : CorBola.values()) {
-            for (int i = 0; i < (pilhasCheias * maxBolas) / CorBola.values().length; i++) {
-                todasBolas.add(new Bolas(cor));
-            }
+                for(int i = 0; i < bolasCores; i++){
+                    todasBolas.add(new Bolas(cor));
+                }
         }
 
         //embaralha as cores dentro daspilhas
         Collections.shuffle(todasBolas);
 
         //cria a estrutura de pilhas onde as bolas ficarão guardadas
-        List<Stack<Bolas>> pilhasBolas = new ArrayList<>();
+        pilhasBolas = new ArrayList<>();
         for (int i = 0; i < numPilhas; i++) {
             pilhasBolas.add(new Stack<>());//cria uma pilha vazia para cada 
         }

@@ -5,55 +5,102 @@
 package com.mycompany.questao2;
 
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class MultiJogadores {
 
-    private Jogo jogador1;
-    private Jogo jogador2;
+    Jogo jogoDisputado;
+    Scanner leitor = new Scanner(System.in);
+    List<Integer> jogadoresAtivos; //guarda o num de jogadores
 
     public MultiJogadores() {
         System.out.println("Inicializando jogo MultiPlayer");
-        jogador1 = new Jogo();
-        jogador2 = new Jogo();
+        jogoDisputado = new Jogo();//cria o tabuleiro do jogo
+        quantJogadores();
+        System.out.println("A partida tem " + jogadoresAtivos.size() + " jogadores");
+    }
+
+    public void quantJogadores() {
+        int maxJogadores = 5;
+        int minJogadores = 2;
+        int quantInicial;
+        
+        while (true) {
+            System.out.println("Quantos jogadores iram participar?");
+
+            System.out.println("(" + minJogadores + " - " + maxJogadores + ")");
+            if (leitor.hasNextInt()) {
+                quantInicial = leitor.nextInt();
+                if (quantInicial >= minJogadores && quantInicial <= maxJogadores) {
+                    break;
+                } else {
+                    System.out.println("Só são permitidos jogadores de " + minJogadores + " até " + maxJogadores);
+                }
+            }else{
+                System.out.println("Por favor digite um número");
+                leitor.next();
+            }
+        }
+        
+        //adiciona o numero de jogadores a lista
+        jogadoresAtivos = new ArrayList<>();
+        for(int i = 1; i <= quantInicial; i++){
+        jogadoresAtivos.add(i);
+        }
     }
 
     public void iniciar() {
-        Scanner leitor = new Scanner(System.in);
-
-        int turno = 1;
+        int jogadorAtual = 0;
 
         while (true) {
-            System.out.println("Vez do jogador: " + turno);
-
-            //determina qual Jogo pertence ao jogador do turno
-            Jogo jogadorAtual = (turno == 1) ? jogador1 : jogador2;
-
-            jogadorAtual.jogoComeco();
-
-            if (jogadorAtual.vitoria()) {
-                System.out.println("Jogador " + turno + " venceu o jogo");
+            
+            //verifica se restou somente 1 jogador
+            if(jogadoresAtivos.size() == 1){
+                int vencedor = jogadoresAtivos.get(0);
+                System.out.println("Jogador " + vencedor + " venceu o jogo por desistência");
                 break;
             }
-            System.out.println("Jogador " + turno + "Digite o número da pilha de origem (1- " + jogadorAtual.numPilhas + " ou 0 para sair: ");
+            
+            //verifica se o jogo foi ganhado na última jogada
+            if(jogoDisputado.vitoria()){
+                System.out.println("Jogo vencido");
+                break;
+            }
+            
+            //garanti que o índice não ultrapasse o limite após a remoção de um jogador
+            if(jogadorAtual >= jogadoresAtivos.size()){
+                jogadorAtual = 0;
+            }
+            
+            //pega o número do jogador atual
+            int turno = jogadoresAtivos.get(jogadorAtual);
+            System.out.println("Vez do jogador: " + turno);
+
+            jogoDisputado.jogoComeco();
+            
+            System.out.println("Jogador " + turno + ": digite o número da pilha de origem (1- " + jogoDisputado.numPilhas + " ou 0 para sair: ");
             int respostaOrigem = leitor.nextInt();
             if (respostaOrigem == 0) {
                 System.out.println("Jogador " + turno + " saiu do jogo");
-                int vencedor = (turno == 1) ? 2 : 1;
-                System.out.println("Jogador " + vencedor + " venceu por desistência");
-                break;
+                jogadoresAtivos.remove(turno);
+                continue;
             }
 
-            System.out.println("Jogador " + turno + "Digite o número da pilha de origem (1- " + jogadorAtual.numPilhas + "): ");
+            System.out.println("Jogador " + turno + "Digite o número da pilha de destino (1- " + jogoDisputado.numPilhas + "): ");
             int respostaDestino = leitor.nextInt();
 
-            boolean movimento = jogadorAtual.moverBola(respostaOrigem, respostaDestino);
+            boolean movimento = jogoDisputado.moverBola(respostaOrigem, respostaDestino);
 
-            if (movimento && jogadorAtual.vitoria()) {
+            if (movimento && jogoDisputado.vitoria()) {
                 System.out.println("Jogador " + turno + " venceu o jogo");
                 break;
+            }else if(!movimento){
+                System.out.println("Movimento inválido");
+                continue;
             }
 
-            turno = (turno == 1) ? 2 : 1;
+            jogadorAtual = (jogadorAtual + 1) % jogadoresAtivos.size();
         }
 
         System.out.println("\nFim do Jogo Multiplayer.");
